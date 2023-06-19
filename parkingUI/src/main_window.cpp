@@ -35,8 +35,8 @@ using namespace Qt;
 *****************************************************************************/
 
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
-	: QMainWindow(parent)
-	, qnode(argc,argv)
+  : QMainWindow(parent)
+  , qnode(argc,argv)
 {
   ui.setupUi(this);
   qnode.init();
@@ -138,8 +138,16 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
 
       PL[i].setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
-      if(PL[i].Pdata.GetParkingStatus() == "empty") SetLabelGreen(&PL[i]);
-      else SetLabelRed(&PL[i]);
+      if(PL[i].Pdata.GetParkingStatus() == "empty")
+      {
+        PL[i].SetUnClickable();
+        SetLabelGreen(&PL[i]);
+      }
+      else
+      {
+        PL[i].SetClickable();
+        SetLabelRed(&PL[i]);
+      }
       scene->addWidget(&PL[i]);
 
       connect(&PL[i], &ClickableLabel::clicked, this, &MainWindow::onParkingLabelClicked);
@@ -234,11 +242,11 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     //if(!data->data) return;
     if(data->type == "ParkOut")
     {
-      if(data->job == "Parker")
+      if(data->job == "ParkOuter")
       {
         if(data->parkinglot<100)
         {
-          //출차된 공간이므로 이차제 빨간색으로 변하게함
+          //출차된 공간이므로 이제 초록색으로 변하게함
           SetLabelGreen(parkoutLotTarget_label);
           parkoutLotTarget_info->SetStatus("empty");
 
@@ -443,8 +451,8 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
         SetLabelGray(&PL[index]);
         ParkingOut_NotReady();
 
-        //비어있는 주차공간list에서 현재 추자명령이 들어간 원소 삭제
-        //EmptyList.remove(index);
+        //비어있는 주차공간list에서 현재 출자명령이 들어간 원소 추가
+        EmptyList.push_back(index);
       }
 
     }

@@ -71,6 +71,7 @@ bool QNode::init() {
   n.getParam("robot_num",robot_num);
   n.getParam("map_path",map_path);
 
+
   nh.getParam("map/resolution",map_resolution);
 
   std::string baseName = "/robot_";
@@ -79,7 +80,7 @@ bool QNode::init() {
   for(int i=0;i<robot_num;i++)
   {
     robot_namespace[i] = baseName + std::to_string(i+1);
-    std::string topicName = robot_namespace[i] + "/odom_pto";
+    std::string topicName = robot_namespace[i] + "/odom";
     robotPose_subsciber[i] = nh.subscribe(topicName,1,&QNode::RobotPoseCallback,this);
   }
 
@@ -127,7 +128,7 @@ void QNode::run() {
 
 void QNode::ReadParkingData(ParkingInfo* ParkingData, int parkingNum)
 {
-  std::string filePath = "../catkin_ws/src/Autonomous-Multi-Robot-Parking-System/parkingUI/config/ParkingLotInfo.txt";
+  std::string filePath = "../catkin_ws/src/parkingUI/config/ParkingLotInfo.txt";
 
   //std::cout<<filePath<<"\n";
   std::ifstream readfile(filePath);
@@ -175,7 +176,7 @@ void QNode::ReadParkingData(ParkingInfo* ParkingData, int parkingNum)
 
 void QNode::WriteParkingData()
 {
-  std::string filePath = "../catkin_ws/src/Autonomous-Multi-Robot-Parking-System/parkingUI/config/ParkingLotInfo.txt";
+  std::string filePath = "../catkin_ws/src/parkingUI/config/ParkingLotInfo.txt";
 
   std::ofstream writefile(filePath,std::ios::trunc);
   if(writefile.is_open())

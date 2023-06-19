@@ -53,9 +53,21 @@ class ClickableLabel : public QLabel
 public:
     explicit ClickableLabel(QWidget* parent = nullptr) : QLabel(parent) {}
     int index=0;
+    bool clickable;
+
     void setIndex(int i)
     {
       this->index = i;
+    }
+
+    void SetClickable()
+    {
+      clickable = true;
+    }
+
+    void SetUnClickable()
+    {
+      clickable = false;
     }
 
     void paintEvent(QPaintEvent *event) override
@@ -76,8 +88,11 @@ signals:
 protected:
     void mousePressEvent(QMouseEvent* event) override
     {
+      if(clickable)
+      {
         emit clicked(&Pdata);
         QLabel::mousePressEvent(event);
+      }
     }
 };
 
@@ -114,6 +129,7 @@ public:
 
   QString str, str_parkinglot, str_status,
           str_status_kor, str_carNum, str_date;
+
 
   //생성자
   explicit NewDialog(ParkingInfo* info, QWidget* parent_) : QDialog(parent)
@@ -178,6 +194,8 @@ public :
         this->setPalette(palette);
       }
     }
+
+
 
     void ParkingIn_ing()
     {
@@ -450,8 +468,8 @@ class MainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
-	MainWindow(int argc, char** argv, QWidget *parent = 0);
-	~MainWindow();
+  MainWindow(int argc, char** argv, QWidget *parent = 0);
+  ~MainWindow();
 
   //Variables
   QPixmap map_ori;
@@ -518,8 +536,8 @@ public Q_SLOTS:
 
 private:
 //public:
-	Ui::MainWindowDesign ui;
-	QNode qnode;
+  Ui::MainWindowDesign ui;
+  QNode qnode;
 
 
 };
